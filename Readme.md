@@ -8,7 +8,10 @@ Showcase the:
 - Unit Testing (xUnit)
 
 ## Installation
-
+- Use [Jet Brains Rider](https://www.jetbrains.com/rider/)
+- Install [SQL Server Backup And Restore](https://plugins.jetbrains.com/plugin/13913-sql-server-backup-and-restore) Rider Plugin
+- Install [SQL Server Developer](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
+- Download [AdventureWorks sample databases OLTP](https://learn.microsoft.com/en-us/sql/samples/adventureworks-install-configure?view=sql-server-ver16&tabs=ssms)
 
 ## Usage
 
