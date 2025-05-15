@@ -1,7 +1,6 @@
 using DependencyInjectionApi.Data;
 using DependencyInjectionApi.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace DependencyInjectionApi.Controllers;
 
@@ -9,16 +8,18 @@ namespace DependencyInjectionApi.Controllers;
 [Route("api/v1/[controller]")]
 public class CustomersController : ControllerBase
 {
-    private readonly AdventureWorksDw2022Context _dbContext;
+    private readonly CustomersService _customersService;
     private readonly ICalculationService _calculationService;
+    private const int MaxRecordsRetrieved = 1000;
 
-    public CustomersController(AdventureWorksDw2022Context dbContext, ICalculationService calculationService)
+    public CustomersController(CustomersService customersService, ICalculationService calculationService)
     {
-        _dbContext = dbContext;
+        _customersService = customersService;
         _calculationService = calculationService;
     }
 
-    [HttpGet("echo")] public IActionResult Echo() => Ok("Echo");
+    [HttpGet("echo")]
+    public IActionResult Echo() => Ok("Echo");
 
     [HttpGet("calculate-discount")]
     public IActionResult CalculateDiscount(int originalPrice, int discountPercentage)
@@ -37,52 +38,21 @@ public class CustomersController : ControllerBase
     [HttpGet("")]
     public async Task<IActionResult> GetCustomers(int pageNumber = 1, int customersPerPage = 10)
     {
-        var maxRecordsRetrieved = 1000;
-
-        if (pageNumber <= 0)
-            throw new InvalidOperationException("PageNumber must be non-negative");
-        if (customersPerPage > maxRecordsRetrieved)
-            throw new InvalidOperationException($"There is a limit of max {maxRecordsRetrieved} customers per page.");
-
-        var totalRecords = await _dbContext.DimCustomers.CountAsync();
-
-        var skip = (pageNumber - 1) * customersPerPage;
-
-        var customers = await _dbContext.DimCustomers
-            .OrderBy(c => c.LastName)
-            .Select(c => new
-            {
-                c.FirstName,
-                c.LastName,
-                c.Gender
-            })
-            .Skip(skip)
-            .Take(customersPerPage)
-            .ToListAsync();
-
-        var response = new
+        try
         {
-            TotalRecords = totalRecords,
-            PageNumber = pageNumber,
-            CustomersPerPage = customersPerPage,
-            Customers = customers
-        };
-
-        return Ok(response);
+            var response = await _customersService.GetCustomersAsync(pageNumber, customersPerPage, MaxRecordsRetrieved);
+            return Ok(response);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetCustomer(int id)
     {
-        var customer = await _dbContext.DimCustomers
-            .Where(c => c.CustomerKey == id)
-            .Select(c => new
-            {
-                c.FirstName,
-                c.LastName,
-                c.Gender
-            })
-            .FirstOrDefaultAsync();
+        var customer = await _customersService.GetCustomerAsync(id);
 
         if (customer == null)
         {
@@ -100,18 +70,12 @@ public class CustomersController : ControllerBase
             return BadRequest("Updated customer data is required.");
         }
 
-        var customer = await _dbContext.DimCustomers.FirstOrDefaultAsync(c => c.CustomerKey == id);
+        var result = await _customersService.EditCustomerAsync(id, updatedCustomer);
 
-        if (customer == null)
+        if (!result)
         {
             return NotFound();
         }
-
-        customer.FirstName = updatedCustomer.FirstName;
-        customer.LastName = updatedCustomer.LastName;
-        customer.Gender = updatedCustomer.Gender;
-
-        await _dbContext.SaveChangesAsync();
 
         return NoContent();
     }
@@ -119,15 +83,12 @@ public class CustomersController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteCustomer(int id)
     {
-        var customer = await _dbContext.DimCustomers.FirstOrDefaultAsync(c => c.CustomerKey == id);
+        var result = await _customersService.DeleteCustomerAsync(id);
 
-        if (customer == null)
+        if (!result)
         {
             return NotFound();
         }
-
-        _dbContext.DimCustomers.Remove(customer);
-        await _dbContext.SaveChangesAsync();
 
         return NoContent();
     }
