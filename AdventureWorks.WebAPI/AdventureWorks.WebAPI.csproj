@@ -18,7 +18,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\AdventureWorks.DiscountService\AdventureWorks.DiscountService.csproj" />
-      <ProjectReference Include="..\AdventureWorks.Interfaces\AdventureWorks.Interfaces.csproj" />
     </ItemGroup>
 
 </Project>
