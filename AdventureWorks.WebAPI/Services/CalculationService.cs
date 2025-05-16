@@ -1,4 +1,4 @@
-namespace DependencyInjectionApi.Services;
+namespace AdventureWorks.Services;
 
 public interface ICalculationService
 {

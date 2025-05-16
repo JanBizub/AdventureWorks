@@ -1,14 +1,18 @@
 using DependencyInjectionApi.Data;
+using DependencyInjectionApi.DTO;
 using Microsoft.EntityFrameworkCore;
 
-namespace DependencyInjectionApi.Services;
+namespace AdventureWorks.Services;
 
 public class CustomersService
 {
     private readonly AdventureWorksDw2022Context _dbContext;
+    
+    private readonly ILogger _logger;
 
-    public CustomersService(AdventureWorksDw2022Context dbContext)
+    public CustomersService(AdventureWorksDw2022Context dbContext, ILogger<CustomersService> logger)
     {
+        _logger = logger;
         _dbContext = dbContext;
     }
 
@@ -57,6 +61,7 @@ public class CustomersService
             .FirstOrDefaultAsync();
     }
 
+    // todo: Use DTO
     public async Task<bool> EditCustomerAsync(int id, DimCustomer updatedCustomer)
     {
         var customer = await _dbContext.DimCustomers.FirstOrDefaultAsync(c => c.CustomerKey == id);
@@ -74,7 +79,25 @@ public class CustomersService
 
         return true;
     }
+    
+    public async Task<bool> CreateCustomerAsync(NewCustomerDto newCustomer)
+    {
+        var customerMailExists = await _dbContext.DimCustomers.AnyAsync(c => c.EmailAddress == newCustomer.EmailAddress);
+        
+        if (customerMailExists) throw new InvalidOperationException("Customer already exists.");
 
+        var dbCustomer = new DimCustomer();
+        dbCustomer.EmailAddress = newCustomer.EmailAddress;
+        
+        await _dbContext.DimCustomers.AddAsync(dbCustomer);
+        await _dbContext.SaveChangesAsync();
+        
+        // todo: on error do nothing. If logger service does not work, do not interrupt the createion process
+        _logger.LogInformation("Created new customer with email address {@newCustomer}", newCustomer);
+        
+        return true;
+    }
+    
     public async Task<bool> DeleteCustomerAsync(int id)
     {
         var customer = await _dbContext.DimCustomers.FirstOrDefaultAsync(c => c.CustomerKey == id);

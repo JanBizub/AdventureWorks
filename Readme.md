@@ -13,6 +13,11 @@ Showcase the:
 - Install [SQL Server Developer](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
 - Download [AdventureWorks sample databases OLTP](https://learn.microsoft.com/en-us/sql/samples/adventureworks-install-configure?view=sql-server-ver16&tabs=ssms)
 
+
+## Notes
+- Do not build Repository or Unit Of Work patterns around the Entity Framework because it already implements it.
+
+
 ## Usage
 
 

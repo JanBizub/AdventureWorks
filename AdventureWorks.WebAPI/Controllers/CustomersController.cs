@@ -1,5 +1,5 @@
+using AdventureWorks.Services;
 using DependencyInjectionApi.Data;
-using DependencyInjectionApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DependencyInjectionApi.Controllers;
