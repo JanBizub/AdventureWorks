@@ -1,0 +1,7 @@
+﻿services:
+  adventureworks.reporting.api:
+    image: adventureworks.reporting.api
+    build:
+      context: .
+      dockerfile: AdventureWorks.Reporting.API/Dockerfile
+

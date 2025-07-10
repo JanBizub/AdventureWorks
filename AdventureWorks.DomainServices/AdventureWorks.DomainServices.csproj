@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AdventureWorks.Data.OLTP\AdventureWorks.Data.OLTP.csproj" />
+  </ItemGroup>
+
 </Project>
