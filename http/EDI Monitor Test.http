@@ -1,0 +1,43 @@
+### Test EDI Gateway - Send Sample Purchase Order
+POST https://localhost:7132/api/EdiReceiver/receive
+Content-Type: text/plain
+
+ISA*00*          *00*          *ZZ*SENDER         *ZZ*RECEIVER       *230717*1200*U*00401*000000001*0*P*>~
+GS*PO*SENDER*RECEIVER*20230717*1200*1*X*004010~
+ST*850*0001~
+BEG*00*SA*PO123456**20230717~
+DTM*002*20230717~
+N1*ST*ACME CORP*92*12345~
+N3*123 MAIN ST~
+N4*ANYTOWN*NY*12345*US~
+PO1*1*10*EA*1.50**BP*ABC123*VN*PART123~
+CTT*1~
+SE*10*0001~
+GE*1*1~
+IEA*1*000000001~
+
+### Test EDI Gateway - Send Sample Invoice
+POST https://localhost:7132/api/EdiReceiver/receive
+Content-Type: text/plain
+
+ISA*00*          *00*          *ZZ*SENDER         *ZZ*RECEIVER       *230717*1200*U*00401*000000002*0*P*>~
+GS*IN*SENDER*RECEIVER*20230717*1200*2*X*004010~
+ST*810*0002~
+BIG*20230717*INV123456*PO123456~
+DTM*003*20230717~
+N1*BT*ACME CORP*92*12345~
+IT1*1*10*EA*1.50**BP*ABC123*VN*PART123~
+TDS*1500~
+CTT*1~
+SE*8*0002~
+GE*1*2~
+IEA*1*000000002~
+
+### Test EDI Monitor - Get Recent Messages
+GET https://localhost:7132/api/EdiMonitor/messages
+
+### Test EDI Monitor - Echo
+GET https://localhost:7132/api/EdiMonitor/echo
+
+### Test EDI Gateway - Echo
+GET https://localhost:7132/api/EdiReceiver/echo
