@@ -159,37 +159,43 @@ function App() {
       field: 'id', 
       width: 80,
       cellRenderer: (params) => `#${params.value}`,
-      sort: 'desc'
+      sort: 'desc',
+      flex: 0
     },
     { 
       headerName: 'Message Type', 
       field: 'messageType', 
-      width: 150,
-      cellRenderer: MessageTypeCellRenderer
+      cellRenderer: MessageTypeCellRenderer,
+      flex: 1,
+      minWidth: 150
     },
     { 
       headerName: 'Status', 
       field: 'status', 
-      width: 130,
-      cellRenderer: StatusCellRenderer
+      cellRenderer: StatusCellRenderer,
+      flex: 1,
+      minWidth: 130
     },
     { 
       headerName: 'Received At', 
       field: 'receivedAt', 
-      width: 180,
-      cellRenderer: DateCellRenderer
+      cellRenderer: DateCellRenderer,
+      flex: 1.5,
+      minWidth: 180
     },
     { 
       headerName: 'Length', 
       field: 'length', 
-      width: 120,
-      cellRenderer: (params) => `${params.value} chars`
+      cellRenderer: (params) => `${params.value} chars`,
+      flex: 0.8,
+      minWidth: 120
     },
     { 
       headerName: 'Source', 
       field: 'sourceIdentifier', 
-      width: 200,
-      cellRenderer: (params) => params.value || 'N/A'
+      cellRenderer: (params) => params.value || 'N/A',
+      flex: 1.2,
+      minWidth: 150
     }
   ], []);
 
@@ -197,8 +203,7 @@ function App() {
   const defaultColDef = useMemo(() => ({
     sortable: true,
     filter: true,
-    resizable: true,
-    flex: 1
+    resizable: true
   }), []);
 
   return (
@@ -225,7 +230,7 @@ function App() {
           </Toolbar>
         </AppBar>
 
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Box sx={{ mx: 2, mt: 4, mb: 4 }}>
           <Paper elevation={3} sx={{ p: 3 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
               <Typography variant="h4" component="h2">
@@ -255,14 +260,14 @@ function App() {
                 </Alert>
               </Box>
             ) : (
-              <Box sx={{ height: 600, width: '100%' }}>
+              <Box sx={{ height: 'calc(100vh - 280px)', width: '100%', minHeight: 500 }}>
                 <div className="ag-theme-material" style={{ height: '100%', width: '100%' }}>
                   <AgGridReact
                     rowData={messages}
                     columnDefs={columnDefs}
                     defaultColDef={defaultColDef}
                     pagination={true}
-                    paginationPageSize={20}
+                    paginationPageSize={25}
                     animateRows={true}
                     enableCellTextSelection={true}
                     suppressRowClickSelection={true}
@@ -272,7 +277,7 @@ function App() {
               </Box>
             )}
           </Paper>
-        </Container>
+        </Box>
       </Box>
     </ThemeProvider>
   );
