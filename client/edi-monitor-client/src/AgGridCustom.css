@@ -1,0 +1,44 @@
+/* Custom AG Grid styling to better integrate with Material-UI */
+.ag-theme-material {
+  --ag-header-height: 56px;
+  --ag-row-height: 52px;
+  --ag-header-background-color: #f5f5f5;
+  --ag-header-foreground-color: rgba(0, 0, 0, 0.87);
+  --ag-border-color: #e0e0e0;
+  --ag-row-border-color: #e0e0e0;
+  --ag-odd-row-background-color: #fafafa;
+  --ag-hover-color: #f5f5f5;
+  --ag-selected-row-background-color: #e3f2fd;
+  --ag-font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  --ag-font-size: 14px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.ag-theme-material .ag-header-cell {
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.ag-theme-material .ag-cell {
+  display: flex;
+  align-items: center;
+}
+
+.ag-theme-material .ag-row-hover {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+
+.ag-theme-material .ag-paging-panel {
+  border-top: 1px solid #e0e0e0;
+  background-color: #fafafa;
+  padding: 8px 16px;
+}
+
+.ag-theme-material .ag-paging-button {
+  color: #1976d2;
+}
+
+.ag-theme-material .ag-paging-button[disabled] {
+  color: rgba(0, 0, 0, 0.26);
+}

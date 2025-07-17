@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import * as signalR from '@microsoft/signalr';
 import axios from 'axios';
 import {
@@ -9,17 +9,12 @@ import {
   Paper,
   Box,
   Chip,
-  Card,
-  CardContent,
   IconButton,
-  CircularProgress,
   Alert,
-  Grid,
   Divider
 } from '@mui/material';
 import {
   Refresh as RefreshIcon,
-  Circle as CircleIcon,
   CheckCircle as CheckCircleIcon,
   Error as ErrorIcon,
   Schedule as ScheduleIcon,
@@ -27,6 +22,14 @@ import {
 } from '@mui/icons-material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import { AgGridReact } from 'ag-grid-react';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-material.css';
+import './AgGridCustom.css';
+
+import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 const theme = createTheme({
   palette: {
@@ -112,9 +115,91 @@ function App() {
       case 'processing': return <ScheduleIcon />;
       case 'completed': return <InfoIcon />;
       case 'error': return <ErrorIcon />;
-      default: return <CircleIcon />;
+      default: return <InfoIcon />;
     }
   };
+
+  // Status cell renderer for AG Grid
+  const StatusCellRenderer = (params) => {
+    const status = params.value;
+    return (
+      <Chip
+        icon={getStatusIcon(status)}
+        label={status}
+        color={getStatusColor(status)}
+        variant="filled"
+        size="small"
+        sx={{ fontSize: '0.75rem' }}
+      />
+    );
+  };
+
+  // Message Type cell renderer for AG Grid
+  const MessageTypeCellRenderer = (params) => {
+    return (
+      <Chip 
+        label={params.value} 
+        variant="outlined" 
+        size="small"
+        color="primary"
+        sx={{ fontSize: '0.75rem' }}
+      />
+    );
+  };
+
+  // Date formatter for AG Grid
+  const DateCellRenderer = (params) => {
+    return formatDateTime(params.value);
+  };
+
+  // Column definitions for AG Grid
+  const columnDefs = useMemo(() => [
+    { 
+      headerName: 'ID', 
+      field: 'id', 
+      width: 80,
+      cellRenderer: (params) => `#${params.value}`,
+      sort: 'desc'
+    },
+    { 
+      headerName: 'Message Type', 
+      field: 'messageType', 
+      width: 150,
+      cellRenderer: MessageTypeCellRenderer
+    },
+    { 
+      headerName: 'Status', 
+      field: 'status', 
+      width: 130,
+      cellRenderer: StatusCellRenderer
+    },
+    { 
+      headerName: 'Received At', 
+      field: 'receivedAt', 
+      width: 180,
+      cellRenderer: DateCellRenderer
+    },
+    { 
+      headerName: 'Length', 
+      field: 'length', 
+      width: 120,
+      cellRenderer: (params) => `${params.value} chars`
+    },
+    { 
+      headerName: 'Source', 
+      field: 'sourceIdentifier', 
+      width: 200,
+      cellRenderer: (params) => params.value || 'N/A'
+    }
+  ], []);
+
+  // Default column definition
+  const defaultColDef = useMemo(() => ({
+    sortable: true,
+    filter: true,
+    resizable: true,
+    flex: 1
+  }), []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -170,65 +255,21 @@ function App() {
                 </Alert>
               </Box>
             ) : (
-              <Grid container spacing={2}>
-                {messages.map((message) => (
-                  <Grid item xs={12} key={message.id}>
-                    <Card elevation={2} sx={{ '&:hover': { elevation: 4 } }}>
-                      <CardContent>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-                          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-                            <Typography variant="h6" component="span" color="text.secondary">
-                              #{message.id}
-                            </Typography>
-                            <Chip 
-                              label={message.messageType} 
-                              variant="outlined" 
-                              size="small"
-                              color="primary"
-                            />
-                          </Box>
-                          <Chip
-                            icon={getStatusIcon(message.status)}
-                            label={message.status}
-                            color={getStatusColor(message.status)}
-                            variant="filled"
-                            size="small"
-                          />
-                        </Box>
-                        
-                        <Grid container spacing={2}>
-                          <Grid item xs={12} sm={4}>
-                            <Typography variant="body2" color="text.secondary">
-                              Received
-                            </Typography>
-                            <Typography variant="body1">
-                              {formatDateTime(message.receivedAt)}
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={12} sm={4}>
-                            <Typography variant="body2" color="text.secondary">
-                              Length
-                            </Typography>
-                            <Typography variant="body1">
-                              {message.length} characters
-                            </Typography>
-                          </Grid>
-                          {message.sourceIdentifier && (
-                            <Grid item xs={12} sm={4}>
-                              <Typography variant="body2" color="text.secondary">
-                                Source
-                              </Typography>
-                              <Typography variant="body1">
-                                {message.sourceIdentifier}
-                              </Typography>
-                            </Grid>
-                          )}
-                        </Grid>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
+              <Box sx={{ height: 600, width: '100%' }}>
+                <div className="ag-theme-material" style={{ height: '100%', width: '100%' }}>
+                  <AgGridReact
+                    rowData={messages}
+                    columnDefs={columnDefs}
+                    defaultColDef={defaultColDef}
+                    pagination={true}
+                    paginationPageSize={20}
+                    animateRows={true}
+                    enableCellTextSelection={true}
+                    suppressRowClickSelection={true}
+                    getRowId={(params) => params.data.id}
+                  />
+                </div>
+              </Box>
             )}
           </Paper>
         </Container>
