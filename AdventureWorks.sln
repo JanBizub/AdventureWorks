@@ -3,18 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventureWorks.Data.OLAP", "AdventureWorks.Data.OLAP\AdventureWorks.Data.OLAP.csproj", "{0C6793B0-532C-4FA7-9B28-96E90E68026B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventureWorks.Data.OLAP", "src\AdventureWorks.Data.OLAP\AdventureWorks.Data.OLAP.csproj", "{0C6793B0-532C-4FA7-9B28-96E90E68026B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventureWorks.Data.OLTP", "AdventureWorks.Data.OLTP\AdventureWorks.Data.OLTP.csproj", "{B039671E-E929-477D-B10C-869022BCBFD9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventureWorks.Data.OLTP", "src\AdventureWorks.Data.OLTP\AdventureWorks.Data.OLTP.csproj", "{B039671E-E929-477D-B10C-869022BCBFD9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{663A67F1-F9F8-45DA-AA2F-B2F30AAA04B6}"
 	ProjectSection(SolutionItems) = preProject
 		compose.yaml = compose.yaml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDIGateway.API", "EDIGateway.API\EDIGateway.API.csproj", "{6B323C6F-7448-400C-BC7A-464C6CBB3BD6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDIGateway.API", "src\EDIGateway.API\EDIGateway.API.csproj", "{6B323C6F-7448-400C-BC7A-464C6CBB3BD6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDIMonitor.API", "EDIMonitor.API\EDIMonitor.API.csproj", "{A00D6F09-1D1D-45BE-85E7-2CCAE128E7F6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDIMonitor.API", "src\EDIMonitor.API\EDIMonitor.API.csproj", "{A00D6F09-1D1D-45BE-85E7-2CCAE128E7F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
