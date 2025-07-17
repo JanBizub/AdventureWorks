@@ -18,7 +18,7 @@ try
     AnsiConsole.MarkupLine("Connection Established.");
 
     await tasksChannel.QueueDeclareAsync(
-        queue: "task_queue",
+        queue: "edi.orders.incoming",
         durable: true,
         exclusive: false,
         autoDelete: false,
@@ -50,7 +50,7 @@ try
 
                 case ConsoleKey.D2:
                     // TODO: implement a logger and add it as param
-                    var newConsumer = new DummyConsumer(tasksChannel,"task_queue"); 
+                    var newConsumer = new DummyConsumer(tasksChannel,"edi.orders.incoming"); 
                     await newConsumer.SubscribeToQueueAsync();
                     runningDummyConsumers.Add(newConsumer);
                     break;
@@ -67,7 +67,7 @@ try
 
                 case ConsoleKey.D4:
                     RabbitManagementService rms = new("http://localhost:15672/api", "guest", "guest");
-                    var res = await rms.GetQueueInfoAsync("task_queue");
+                    var res = await rms.GetQueueInfoAsync("edi.orders.incoming");
                     AnsiConsole.MarkupLine($"MSG: {res.Messages} | MSG RDY: {res.MessagesReady} | MSG UNACK: {res.MessagesUnacknowledged}");
                     break;
 
@@ -81,13 +81,13 @@ try
     while (!quitProgramCancellationSource.IsCancellationRequested)
     {
         // todo: how to display ConsumerTag of the consumers, so I can list theyr names?
-        var consumerCount = await tasksChannel.ConsumerCountAsync("task_queue");
-        var messagesCount = await tasksChannel.MessageCountAsync("task_queue");
+        var consumerCount = await tasksChannel.ConsumerCountAsync("edi.orders.incoming");
+        var messagesCount = await tasksChannel.MessageCountAsync("edi.orders.incoming");
         AnsiConsole.Clear();
-        AnsiConsole.MarkupLine("[bold]Messages waiting in the task_queue':[/]");
+        AnsiConsole.MarkupLine("[bold]Messages waiting in the edi.orders.incoming':[/]");
         AnsiConsole.MarkupLine($"- [green]{messagesCount} messages[/]");
 
-        AnsiConsole.MarkupLine("[bold]Consumers connected to 'task_queue':[/]");
+        AnsiConsole.MarkupLine("[bold]Consumers connected to 'edi.orders.incoming':[/]");
         AnsiConsole.MarkupLine($"- [green]{consumerCount} consumer(s) connected[/]");
 
         AnsiConsole.MarkupLine("[bold]Consumers references':[/]");
@@ -99,7 +99,7 @@ try
         }
 
         RabbitManagementService rms = new("http://localhost:15672/api", "guest", "guest");
-        var res = await rms.GetQueueInfoAsync("task_queue");
+        var res = await rms.GetQueueInfoAsync("edi.orders.incoming");
         AnsiConsole.MarkupLine($"[bold] MSG: {res.Messages} | MSG RDY: {res.MessagesReady} | MSG UNACK: {res.MessagesUnacknowledged} [/]");
 
         AnsiConsole.Markup("[red]Press ESC key to quit program.[/]");

@@ -10,7 +10,7 @@ public class DummyProducer
         this.channel = channel;
     }
 
-    public async Task SpawnMessageAsync(string message = "Hello", string queue = "task_queue")
+    public async Task SpawnMessageAsync(string message = "Hello", string queue = "edi.orders.incoming")
     {
         var properties = new BasicProperties { Persistent = true };
         var body = Encoding.UTF8.GetBytes(message);
