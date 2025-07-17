@@ -1,19 +1,26 @@
 ﻿services:
-  adventureworks.reporting.api:
-    image: adventureworks.reporting.api
+  edigateway.api:
+    image: edigateway.api
     build:
       context: .
-      dockerfile: AdventureWorks.Reporting.API/Dockerfile
-
-  adventureworks.edi.webapi:
-    image: adventureworks.edi.webapi
-    build:
-      context: .
-      dockerfile: AdventureWorks.EDI.WebAPI/Dockerfile
+      dockerfile: src/EDIGateway.API/Dockerfile
 
   edimonitor.api:
     image: edimonitor.api
     build:
       context: .
-      dockerfile: EDIMonitor.API/Dockerfile
+      dockerfile: src/EDIMonitor.API/Dockerfile
+
+  edi-monitor-client:
+    build:
+      context: ./client/edi-monitor-client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - edigateway.api
+      - edimonitor.api
+
 

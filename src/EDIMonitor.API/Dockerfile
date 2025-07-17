@@ -7,10 +7,10 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["EDIMonitor.API/EDIMonitor.API.csproj", "EDIMonitor.API/"]
+COPY ["src/EDIMonitor.API/EDIMonitor.API.csproj", "EDIMonitor.API/"]
 RUN dotnet restore "EDIMonitor.API/EDIMonitor.API.csproj"
 COPY . .
-WORKDIR "/src/EDIMonitor.API"
+WORKDIR "/src/src/EDIMonitor.API"
 RUN dotnet build "./EDIMonitor.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
