@@ -12,3 +12,6 @@ Tech Showcase
 - ``dotnet ef dbcontext scaffold "Server=localhost;Database=AdventureWorksOLTP;Integrated Security=True;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -o Entities --context AdventureWorksOLTPContext --context-dir .``
 
 ---
+
+# Authentication 
+- [ASP.NET Identity](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity-api-authorization?view=aspnetcore-9.0)
