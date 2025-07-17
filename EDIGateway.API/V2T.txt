@@ -1,0 +1,6 @@
+I want to do a simulation of the EDI process. I will have an Asp.net MVC core application which will receive the messages. I am basing you a sample message. In what format these messages are transmitted in the real life scenarios? Is it base 464 or is it plain text or what?
+
+In real-life scenarios, EDI messages like your sample are typically transmitted as plain text files using standardized formats such as EDIFACT (as in your example) or ANSI X12. These files are exchanged over protocols like AS2, FTP, SFTP, or HTTP. The messages are not usually encoded in base64 or other formats unless required by the transport protocol or for security reasons (e.g., encryption). The receiving application parses the plain text according to the EDI standard being used.
+OK now create a file that will. 
+
+I. A message. That will come to my system. Create a download of file that. Demonstrates or is a file that will be incoming to my. Controller. Via HTTP. 

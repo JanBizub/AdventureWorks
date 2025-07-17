@@ -1,0 +1,68 @@
+POST https://localhost:7132/api/EdiReceiver/receive
+Content-Type: text/plain
+
+UNH+ORD0003+ORDERS:D:96A:UN:1.1'
+BGM+220+PO0003+9'
+DTM+137:20250709:102'
+NAD+BY+123456789::16++ACME EUROPE LTD+Main Street 1+Brussels++1000+BE'
+NAD+SU+987654321::16++Supplier Co.+Supply Street 5+Berlin++10115+DE'
+CUX+2:EUR'
+LIN+1++P5180:BP'
+QTY+21:32'
+MOA+203:4255.75'
+LIN+2++P5664:BP'
+QTY+21:7'
+MOA+203:3091.47'
+LIN+3++P2823:BP'
+QTY+21:9'
+MOA+203:754.65'
+LIN+4++P6280:BP'
+QTY+21:16'
+MOA+203:598.8'
+LIN+5++P5959:BP'
+QTY+21:38'
+MOA+203:8349.35'
+UNT+22+ORD0003'
+
+###
+POST https://localhost:7132/api/EdiReceiver/receive
+Content-Type: application/json
+
+{
+    "UNH": "ORD0003+ORDERS:D:96A:UN:1.1",
+    "BGM": "220+PO0003+9",
+    "DTM": "137:20250709:102",
+    "NAD": [
+        "BY+123456789::16++ACME EUROPE LTD+Main Street 1+Brussels++1000+BE",
+        "SU+987654321::16++Supplier Co.+Supply Street 5+Berlin++10115+DE"
+    ],
+    "CUX": "2:EUR",
+    "LINES": [
+        {
+            "LIN": "1++P5180:BP",
+            "QTY": "21:32",
+            "MOA": "203:4255.75"
+        },
+        {
+            "LIN": "2++P5664:BP",
+            "QTY": "21:7",
+            "MOA": "203:3091.47"
+        },
+        {
+            "LIN": "3++P2823:BP",
+            "QTY": "21:9",
+            "MOA": "203:754.65"
+        },
+        {
+            "LIN": "4++P6280:BP",
+            "QTY": "21:16",
+            "MOA": "203:598.8"
+        },
+        {
+            "LIN": "5++P5959:BP",
+            "QTY": "21:38",
+            "MOA": "203:8349.35"
+        }
+    ],
+    "UNT": "22+ORD0003"
+}

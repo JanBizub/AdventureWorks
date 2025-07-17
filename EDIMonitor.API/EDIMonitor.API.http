@@ -1,0 +1,6 @@
+@EDIMonitor.API_HostAddress = http://localhost:5096
+
+GET {{EDIMonitor.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

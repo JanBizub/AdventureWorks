@@ -5,3 +5,15 @@
       context: .
       dockerfile: AdventureWorks.Reporting.API/Dockerfile
 
+  adventureworks.edi.webapi:
+    image: adventureworks.edi.webapi
+    build:
+      context: .
+      dockerfile: AdventureWorks.EDI.WebAPI/Dockerfile
+
+  edimonitor.api:
+    image: edimonitor.api
+    build:
+      context: .
+      dockerfile: EDIMonitor.API/Dockerfile
+
