@@ -1,7 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import * as signalR from '@microsoft/signalr';
 import axios from 'axios';
-import './App.css';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Container,
+  Paper,
+  Box,
+  Chip,
+  Card,
+  CardContent,
+  IconButton,
+  CircularProgress,
+  Alert,
+  Grid,
+  Divider
+} from '@mui/material';
+import {
+  Refresh as RefreshIcon,
+  Circle as CircleIcon,
+  CheckCircle as CheckCircleIcon,
+  Error as ErrorIcon,
+  Schedule as ScheduleIcon,
+  Info as InfoIcon
+} from '@mui/icons-material';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#1976d2',
+    },
+    secondary: {
+      main: '#dc004e',
+    },
+    background: {
+      default: '#f5f5f5',
+    },
+  },
+});
 
 function App() {
   const [messages, setMessages] = useState([]);
@@ -59,76 +98,142 @@ function App() {
 
   const getStatusColor = (status) => {
     switch (status.toLowerCase()) {
-      case 'received': return '#28a745';
-      case 'processing': return '#ffc107';
-      case 'completed': return '#17a2b8';
-      case 'error': return '#dc3545';
-      default: return '#6c757d';
+      case 'received': return 'success';
+      case 'processing': return 'warning';
+      case 'completed': return 'info';
+      case 'error': return 'error';
+      default: return 'default';
+    }
+  };
+
+  const getStatusIcon = (status) => {
+    switch (status.toLowerCase()) {
+      case 'received': return <CheckCircleIcon />;
+      case 'processing': return <ScheduleIcon />;
+      case 'completed': return <InfoIcon />;
+      case 'error': return <ErrorIcon />;
+      default: return <CircleIcon />;
     }
   };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>EDI Message Monitor</h1>
-        <div className="connection-status">
-          Status: 
-          <span 
-            className={`status-indicator ${isConnected ? 'connected' : 'disconnected'}`}
-          >
-            {isConnected ? 'Connected' : 'Disconnected'}
-          </span>
-        </div>
-      </header>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Box sx={{ flexGrow: 1, minHeight: '100vh' }}>
+        <AppBar position="static" elevation={0}>
+          <Toolbar>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              EDI Message Monitor
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography variant="body2">
+                Status:
+              </Typography>
+              <Chip
+                icon={isConnected ? <CheckCircleIcon /> : <ErrorIcon />}
+                label={isConnected ? 'Connected' : 'Disconnected'}
+                color={isConnected ? 'success' : 'error'}
+                variant="filled"
+                size="small"
+              />
+            </Box>
+          </Toolbar>
+        </AppBar>
 
-      <main className="App-main">
-        <div className="messages-container">
-          <div className="messages-header">
-            <h2>Recent EDI Messages ({messages.length})</h2>
-            <button onClick={loadMessages} className="refresh-btn">
-              Refresh
-            </button>
-          </div>
+        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+          <Paper elevation={3} sx={{ p: 3 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+              <Typography variant="h4" component="h2">
+                Recent EDI Messages ({messages.length})
+              </Typography>
+              <IconButton 
+                onClick={loadMessages} 
+                color="primary"
+                disabled={!isConnected}
+                sx={{ '&:hover': { backgroundColor: 'action.hover' } }}
+              >
+                <RefreshIcon />
+              </IconButton>
+            </Box>
 
-          {messages.length === 0 ? (
-            <div className="no-messages">
-              <p>No EDI messages received yet.</p>
-              <p>Send a message to the EDI Gateway to see it appear here in real-time.</p>
-            </div>
-          ) : (
-            <div className="messages-list">
-              {messages.map((message) => (
-                <div key={message.id} className="message-item">
-                  <div className="message-header">
-                    <span className="message-id">#{message.id}</span>
-                    <span className="message-type">{message.messageType}</span>
-                    <span 
-                      className="message-status"
-                      style={{ backgroundColor: getStatusColor(message.status) }}
-                    >
-                      {message.status}
-                    </span>
-                  </div>
-                  <div className="message-details">
-                    <div className="message-time">
-                      Received: {formatDateTime(message.receivedAt)}
-                    </div>
-                    <div className="message-length">
-                      Length: {message.length} characters
-                    </div>
-                    {message.sourceIdentifier && (
-                      <div className="message-source">
-                        Source: {message.sourceIdentifier}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </main>
-    </div>
+            <Divider sx={{ mb: 3 }} />
+
+            {messages.length === 0 ? (
+              <Box sx={{ textAlign: 'center', py: 8 }}>
+                <Alert severity="info" sx={{ maxWidth: 600, mx: 'auto' }}>
+                  <Typography variant="h6" gutterBottom>
+                    No EDI messages received yet.
+                  </Typography>
+                  <Typography variant="body2">
+                    Send a message to the EDI Gateway to see it appear here in real-time.
+                  </Typography>
+                </Alert>
+              </Box>
+            ) : (
+              <Grid container spacing={2}>
+                {messages.map((message) => (
+                  <Grid item xs={12} key={message.id}>
+                    <Card elevation={2} sx={{ '&:hover': { elevation: 4 } }}>
+                      <CardContent>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                            <Typography variant="h6" component="span" color="text.secondary">
+                              #{message.id}
+                            </Typography>
+                            <Chip 
+                              label={message.messageType} 
+                              variant="outlined" 
+                              size="small"
+                              color="primary"
+                            />
+                          </Box>
+                          <Chip
+                            icon={getStatusIcon(message.status)}
+                            label={message.status}
+                            color={getStatusColor(message.status)}
+                            variant="filled"
+                            size="small"
+                          />
+                        </Box>
+                        
+                        <Grid container spacing={2}>
+                          <Grid item xs={12} sm={4}>
+                            <Typography variant="body2" color="text.secondary">
+                              Received
+                            </Typography>
+                            <Typography variant="body1">
+                              {formatDateTime(message.receivedAt)}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={12} sm={4}>
+                            <Typography variant="body2" color="text.secondary">
+                              Length
+                            </Typography>
+                            <Typography variant="body1">
+                              {message.length} characters
+                            </Typography>
+                          </Grid>
+                          {message.sourceIdentifier && (
+                            <Grid item xs={12} sm={4}>
+                              <Typography variant="body2" color="text.secondary">
+                                Source
+                              </Typography>
+                              <Typography variant="body1">
+                                {message.sourceIdentifier}
+                              </Typography>
+                            </Grid>
+                          )}
+                        </Grid>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+            )}
+          </Paper>
+        </Container>
+      </Box>
+    </ThemeProvider>
   );
 }
 
