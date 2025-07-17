@@ -1,6 +1,0 @@
-The scenario is like this:
-- EDIGateway.API/EdiReceiverController.cs receives an EDI message
-- It somehow notifies the EDIMonitor.API/EdiMonitor controller that mesages were received
-- That controller is used in the edi-monitor-client react app which is notified in real time and displays some basic info about received messages in simple list
-
-Please do it.
