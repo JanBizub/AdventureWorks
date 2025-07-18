@@ -5,7 +5,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddHttpClient<IEdiNotificationService, EdiNotificationService>();
-builder.Services.AddScoped<IEdiNotificationService, EdiNotificationService>();
 
 builder.Services.AddControllers(options =>
 {
